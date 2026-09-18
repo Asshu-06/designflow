@@ -165,12 +165,15 @@ export const WorkspacePage: React.FC = () => {
     async function initWorkspace() {
       // 1. Check existing submission or draft
       const draft = await getDraft(problem!.id);
-      if (draft && draft.coreClasses) {
+      const isPrefilledCode = (c?: string) =>
+        c && (c.includes('enum VehicleType') || c.includes('SpotType') || c.includes('assignVehicle'));
+
+      if (draft && draft.coreClasses && !isPrefilledCode(draft.coreClasses)) {
         setCode(draft.coreClasses);
-      } else if (attempt?.submission?.coreClasses) {
+      } else if (attempt?.submission?.coreClasses && !isPrefilledCode(attempt.submission.coreClasses)) {
         setCode(attempt.submission.coreClasses);
       } else {
-        // Load default starter template code
+        // Load default clean starter template code
         const tmpl = getStarterTemplate(problem!.slug, selectedLanguage);
         setCode(tmpl);
       }
