@@ -174,16 +174,6 @@ export const WorkspacePage: React.FC = () => {
         const tmpl = getStarterTemplate(problem!.slug, selectedLanguage);
         setCode(tmpl);
       }
-
-      // Initialize attempt if missing
-      if (!attemptIdParam && !attempt) {
-        try {
-          const newAtt = await createAttempt(problem!.id);
-          setAttempt(newAtt);
-        } catch (e) {
-          console.error('Failed to create attempt:', e);
-        }
-      }
     }
 
     initWorkspace();
@@ -276,6 +266,7 @@ export const WorkspacePage: React.FC = () => {
       if (!targetAttemptId) {
         const newAtt = await createAttempt(problem.id);
         targetAttemptId = newAtt.id;
+        setAttempt(newAtt);
       }
 
       await saveDraft(problem.id, subData);

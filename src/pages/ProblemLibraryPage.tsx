@@ -48,14 +48,31 @@ export const ProblemLibraryPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<'All' | 'Solved' | 'Attempted' | 'Unattempted'>('All');
   const [hideGroups, setHideGroups] = useState(false);
 
+  // Helper to read saved draft synchronously
+  const getDraftSync = (problemId: string) => {
+    try {
+      const raw = localStorage.getItem('designloop_drafts_v1');
+      if (!raw) return null;
+      const drafts = JSON.parse(raw);
+      return drafts[problemId] || null;
+    } catch {
+      return null;
+    }
+  };
+
   // Derive status per problem ID
   const problemStatusMap = useMemo(() => {
     const map: Record<string, 'COMPLETED' | 'DRAFT' | 'UNATTEMPTED'> = {};
     problems.forEach((p) => {
       const pAttempts = attempts.filter((a) => a.problemId === p.id);
-      if (pAttempts.some((a) => a.status === 'COMPLETED')) {
+      const hasCompleted = pAttempts.some((a) => a.status === 'COMPLETED' || a.evaluation?.status === 'COMPLETED');
+      const hasSubmittedOrEvaluating = pAttempts.some((a) => a.status === 'SUBMITTED' || a.status === 'EVALUATING' || a.submission || a.evaluation);
+      const draft = getDraftSync(p.id);
+      const hasSavedDraftCode = Boolean(draft && draft.coreClasses && draft.coreClasses.trim().length > 0);
+
+      if (hasCompleted) {
         map[p.id] = 'COMPLETED';
-      } else if (pAttempts.some((a) => a.status === 'DRAFT' || a.status === 'SUBMITTED' || a.status === 'EVALUATING')) {
+      } else if (hasSubmittedOrEvaluating || hasSavedDraftCode) {
         map[p.id] = 'DRAFT';
       } else {
         map[p.id] = 'UNATTEMPTED';

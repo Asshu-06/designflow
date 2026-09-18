@@ -17,7 +17,10 @@ class Vehicle {
         this.licensePlate = licensePlate;
         this.type = type;
     }
-    public VehicleType getType() { return type; }
+    
+    public VehicleType getType() { 
+        return type; 
+    }
 }
 
 class ParkingSpot {
@@ -30,15 +33,15 @@ class ParkingSpot {
         this.type = type;
         this.isOccupied = false;
     }
+
     public boolean assignVehicle(Vehicle v) {
-        if (!isOccupied && canFit(v.getType())) {
-            this.isOccupied = true;
-            return true;
-        }
+        // TODO: Implement spot assignment logic
         return false;
     }
+
     public boolean canFit(VehicleType vType) {
-        return this.type.ordinal() >= vType.ordinal();
+        // TODO: Implement vehicle size matching logic
+        return false;
     }
 }
 
@@ -46,9 +49,7 @@ public class ParkingLot {
     private List<ParkingSpot> spots = new ArrayList<>();
 
     public boolean parkVehicle(Vehicle v) {
-        for (ParkingSpot s : spots) {
-            if (s.assignVehicle(v)) return true;
-        }
+        // TODO: Implement parking allocation strategy across levels/spots
         return false;
     }
 }`,
@@ -65,8 +66,8 @@ export class ParkingSpot {
   constructor(public id: string, public type: SpotType) {}
 
   public canFit(vType: VehicleType): boolean {
-    const ranks: Record<VehicleType, number> = { MOTORCYCLE: 1, COMPACT: 2, LARGE: 3, EV: 2 };
-    return ranks[this.type] >= ranks[vType];
+    // TODO: Implement vehicle size matching logic
+    return false;
   }
 }
 
@@ -74,11 +75,7 @@ export class ParkingLot {
   private spots: ParkingSpot[] = [];
 
   public parkVehicle(v: Vehicle): boolean {
-    const spot = this.spots.find(s => !s.isOccupied && s.canFit(v.type));
-    if (spot) {
-      spot.isOccupied = true;
-      return true;
-    }
+    // TODO: Implement parking spot assignment strategy
     return false;
   }
 }`,
@@ -108,10 +105,7 @@ class ParkingLot:
         self.spots: List[ParkingSpot] = []
 
     def park_vehicle(self, vehicle: Vehicle) -> bool:
-        for spot in self.spots:
-            if not spot.is_occupied and spot.spot_type.value >= vehicle.vehicle_type.value:
-                spot.is_occupied = True
-                return True
+        # TODO: Implement parking spot assignment strategy
         return False`,
     cpp: `// Parking Lot System - Low Level Design (C++ 20)
 #include <iostream>
@@ -130,8 +124,8 @@ public:
 class ParkingLot {
 public:
     bool parkVehicle(const Vehicle& v) {
-        // Implementation logic
-        return true;
+        // TODO: Implement parking spot assignment logic
+        return false;
     }
 };`,
     go: `// Parking Lot System - Low Level Design (Go 1.22)
@@ -156,7 +150,8 @@ type ParkingLot struct {
 }
 
 func (p *ParkingLot) ParkVehicle(v Vehicle) bool {
-	return true
+	// TODO: Implement parking allocation strategy
+	return false
 }`,
   },
 };
